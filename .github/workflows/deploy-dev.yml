@@ -30,7 +30,7 @@ jobs:
           echo "CONTACT_TO_ADDRESS=$CONTACT_TO_ADDRESS" >> .env
           echo "COUCH_DB_URL=$COUCH_DB_URL" >> .env
         env:
-          COUCH_DB_URL: ${{secrets.COUCH_DB_URL}}
+          COUCH_DB_URL: ${{secrets.COUCH_DB_URL_DEV}}
           CONTACT_TO_ADDRESS: ${{secrets.CONTACT_TO_ADDRESS}}
       - name: Deploy
         run: sls deploy --stage dev
