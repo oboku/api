@@ -23,8 +23,10 @@ jobs:
           aws-region: us-east-1
       - uses: actions/checkout@v2
       - name: Install nodejs dependencies
-        run: yarn
-      - name: build & deploy
+        run: |
+          npm install -g serverless 
+          npm install
+      - name: Prepare build environment
         run: |
           touch .env
           echo "CONTACT_TO_ADDRESS=$CONTACT_TO_ADDRESS" >> .env
