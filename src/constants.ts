@@ -1,0 +1,3 @@
+// DO NOT STORE ANY SECRETS HERE
+export const COUCH_DB_URL = process.env.COUCH_DB_URL ?? `__COUCH_DB_URL__`
+export const CONTACT_TO_ADDRESS = process.env.CONTACT_TO_ADDRESS ?? `__CONTACT_TO_ADDRESS__`
