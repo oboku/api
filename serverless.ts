@@ -30,16 +30,16 @@ const serverlessConfiguration: AWS = {
     //   role: "lambdaDefault"
     // }
   },
-  layers: {
-    sharp: {
-      name: "${sls:stage}-sharp",
-      path: `layers/SharpLayer`, // required, path to layer contents on disk
-      description: `sharp@0.30.3`,
-      package: {
-        include: [`node_modules/**`]
-      },
-    }
-  },
+  // layers: {
+  //   sharp: {
+  //     name: "${sls:stage}-sharp",
+  //     path: `layers/SharpLayer`, // required, path to layer contents on disk
+  //     description: `sharp@0.30.3`,
+  //     package: {
+  //       include: [`node_modules/**`]
+  //     },
+  //   }
+  // },
   // import the function via paths
   functions: { covers, signin, signup, requestAccess },
   resources: {
