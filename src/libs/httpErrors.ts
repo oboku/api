@@ -1,5 +1,5 @@
 import { ObokuErrorCode } from '@oboku/shared'
-import * as createError from 'http-errors';
+import createError from 'http-errors';
 
 type ErrorEntry = { code: ObokuErrorCode }
 type ErrorEntries = ErrorEntry[]

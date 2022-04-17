@@ -2,8 +2,8 @@ import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { PromiseReturnType } from '@libs/types';
 import { S3 } from 'aws-sdk'
-import * as createError from 'http-errors'
-import * as sharp from 'sharp'
+import createError from 'http-errors'
+import sharp from 'sharp'
 
 const s3 = new S3({
   region: `us-east-1`

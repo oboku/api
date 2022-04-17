@@ -2,9 +2,9 @@ import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import schema from './schema';
 import { validators } from '@oboku/shared'
-import * as createError from 'http-errors'
+import createError from 'http-errors'
 import { auth } from '@libs/dbHelpers';
-import * as createHttpError from 'http-errors';
+import createHttpError from 'http-errors';
 import { generateToken } from '@libs/auth';
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {

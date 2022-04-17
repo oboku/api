@@ -3,6 +3,10 @@ import covers from '@functions/covers';
 import signin from '@functions/signin';
 import signup from '@functions/signup';
 import requestAccess from '@functions/requestAccess';
+import refreshMetadata from '@functions/refreshMetadata';
+import refreshMetadataLongProcess from '@functions/refreshMetadataLongProcess';
+import syncDataSource from '@functions/syncDataSource';
+import syncDataSourceLongProcess from '@functions/syncDataSourceLongProcess';
 
 const serverlessConfiguration: AWS = {
   service: 'oboku-api',
@@ -23,6 +27,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      STAGE: '${sls:stage}',
       COUCH_DB_URL: '${env:COUCH_DB_URL}',
       CONTACT_TO_ADDRESS: '${env:CONTACT_TO_ADDRESS}',
     },
@@ -41,7 +46,16 @@ const serverlessConfiguration: AWS = {
   //   }
   // },
   // import the function via paths
-  functions: { covers, signin, signup, requestAccess },
+  functions: {
+    covers,
+    signin,
+    signup,
+    requestAccess,
+    refreshMetadata,
+    refreshMetadataLongProcess,
+    syncDataSource,
+    syncDataSourceLongProcess
+  },
   resources: {
     Resources: {
       // @see https://www.serverless.com/framework/docs/providers/aws/guide/iam#custom-iam-roles

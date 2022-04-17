@@ -2,7 +2,7 @@ import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { createHttpError } from '@libs/httpErrors';
 import { middyfy } from '@libs/lambda';
 import schema from './schema';
-import * as nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer'
 import { SSM } from 'aws-sdk'
 import { CONTACT_TO_ADDRESS } from 'src/constants';
 

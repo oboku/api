@@ -1,5 +1,5 @@
 // import { COUCH_DB_URL } from "../constants";
-import * as createNano from 'nano'
+import createNano from 'nano'
 import { generateAdminToken, generateToken } from "./auth";
 import {
   SafeMangoQuery, InsertableBookDocType, ReadingStateState, DocType, ModelOf

@@ -1,9 +1,11 @@
-import * as jwt from 'jsonwebtoken'
-// import * as fs from 'fs'
+import jwt from 'jsonwebtoken'
+// import fs from 'fs'
 // import { JWT_PRIVATE_KEY_PATH } from '../constants'
 // import { APIGatewayProxyEvent } from 'aws-lambda'
 import { SSM } from 'aws-sdk'
-// import * as createHttpError from 'http-errors'
+import { APIGatewayProxyEvent } from 'aws-lambda'
+import { createHttpError } from './httpErrors'
+// import createHttpError from 'http-errors'
 
 const ssm = new SSM({ region: 'us-east-1' })
 
@@ -12,17 +14,24 @@ const getJwtPrivateKey = () => ssm.getParameter({
   WithDecryption: true
 }).promise().then(value => value.Parameter?.Value)
 
-// const _withToken = (privateKey: string) => async (authorization?: string) => {
-//   try {
-//     if (!authorization) throw new Error('Looks like authorization is empty')
+const isAuthorized = async (authorization?: string) => {
+  try {
+    if (!authorization) throw new Error('Looks like authorization is empty')
 
-//     const token = authorization.replace('Bearer ', '')
+    const token = authorization.replace('Bearer ', '')
 
-//     return jwt.verify(token, privateKey, { algorithms: ['RS256'] }) as Token
-//   } catch (e) {
-//     throw createHttpError(401)
-//   }
-// }
+    const privateKey = await getJwtPrivateKey()
+
+    if (!privateKey) {
+      console.error(`Unable to retrieve private key`)
+      throw createHttpError(401)
+    }
+
+    return jwt.verify(token, privateKey, { algorithms: ['RS256'] }) as Token
+  } catch (e) {
+    throw createHttpError(401)
+  }
+}
 
 // export const createAuthenticator = ({ privateKey }: { privateKey: string }) => ({
 //   withToken: _withToken(privateKey)
@@ -58,11 +67,11 @@ export const generateAdminToken = async () => {
   return jwt.sign(data, await getJwtPrivateKey() ?? ``, { algorithm: 'RS256' })
 }
 
-// export const withToken = async (event: APIGatewayProxyEvent) => {
-//   const authorization = event.headers.Authorization as string | undefined || event.headers.authorization as string | undefined
+export const withToken = async (event: Pick<APIGatewayProxyEvent, `headers`>) => {
+  const authorization = event.headers.Authorization as string | undefined || event.headers.authorization as string | undefined
 
-//   return authenticator.withToken(authorization)
-// }
+  return await isAuthorized(authorization)
+}
 
 
 
