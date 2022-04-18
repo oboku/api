@@ -9,30 +9,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy-aws:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
-        with:
-          node-version: "14"
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - uses: actions/checkout@v2
-      - name: Install nodejs dependencies
-        run: |
-          npm install -g serverless 
-          npm install
-      - name: Prepare build environment
-        run: |
-          touch .env
-          echo "CONTACT_TO_ADDRESS=$CONTACT_TO_ADDRESS" >> .env
-          echo "COUCH_DB_URL=$COUCH_DB_URL" >> .env
-        env:
-          COUCH_DB_URL: ${{secrets.COUCH_DB_URL_DEV}}
-          CONTACT_TO_ADDRESS: ${{secrets.CONTACT_TO_ADDRESS}}
-      - name: Deploy
-        run: sls deploy --stage dev
+    uses: ./.github/workflows/deploy.yml
+    with:
+      stage: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.envPAT }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.envPAT }}
+      COUCH_DB_URL: ${{ secrets.COUCH_DB_URL_PROD }}
+      CONTACT_TO_ADDRESS: ${{ secrets.CONTACT_TO_ADDRESS }}
