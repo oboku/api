@@ -26,12 +26,7 @@ export const middyfy = (handler: any) => {
       // handle non http error with 500 and generic message
       fallbackMessage: `An error occurred`,
     }))
-    // @todo eventually protect the api and only allow a subset of origins
-    .use(cors({
-      origin: `*`,
-      headers: `*`,
-      methods: `delete,get,head,options,patch,post,put`
-    }))
+
 }
 
 export const getAwsLambda = () => new Lambda({

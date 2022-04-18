@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "echo todo",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "postinstall": "npx ts-node scripts/prepareLayers.ts"
   },
   "engines": {
     "node": ">=14.15.0"
