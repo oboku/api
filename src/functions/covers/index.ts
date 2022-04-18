@@ -9,6 +9,8 @@ export default {
       http: {
         method: 'get',
         path: 'covers/{id}',
+        // handle preflight cors
+        cors: true,
         request: {
           parameters:
           {

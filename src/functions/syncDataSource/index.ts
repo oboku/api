@@ -7,6 +7,8 @@ export default {
       http: {
         method: 'post',
         path: 'sync-datasource',
+        // handle preflight cors
+        cors: true,
       },
     },
   ],

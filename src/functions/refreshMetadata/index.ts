@@ -7,6 +7,8 @@ export default {
       http: {
         method: 'post',
         path: 'refresh-metadata',
+        // handle preflight cors
+        cors: true,
       },
     },
   ],
