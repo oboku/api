@@ -20,6 +20,8 @@ export const middyfy = (handler: any) => {
         }
       }
     })
+    // @todo eventually protect the api and only allow a subset of origins
+    .use(cors())
     .use(httpErrorHandler({
       // handle non http error with 500 and generic message
       fallbackMessage: `An error occurred`,
