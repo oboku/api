@@ -46,7 +46,7 @@ jobs:
           touch .env
           echo "CONTACT_TO_ADDRESS=${{secrets.CONTACT_TO_ADDRESS}}" >> .env
           echo "COUCH_DB_URL=${{secrets.COUCH_DB_URL}}" >> .env
-          echo "AWS_API_URI=${{secrets.AWS_API_URI}}" >> .env
-          echo "GOOGLE_BOOK_API_URL=${{secrets.GOOGLE_BOOK_API_URL}}" >> .env
+          echo "AWS_API_URI=${{inputs.AWS_API_URI}}" >> .env
+          echo "GOOGLE_BOOK_API_URL=${{inputs.GOOGLE_BOOK_API_URL}}" >> .env
       - name: Deploy
         run: sls deploy --stage ${{ inputs.STAGE }}
