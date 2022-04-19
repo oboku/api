@@ -6,7 +6,7 @@ type ErrorEntries = ErrorEntry[]
 
 export const createHttpError = (code: number, error: ErrorEntry | ErrorEntries = { code: ObokuErrorCode.UNKNOWN }, opts: { expose?: boolean } = { expose: true }) => {
     if (Array.isArray(error)) {
-        return createError(code, JSON.stringify(error), opts)
+        return createError(code, JSON.stringify({ errors: error }), opts)
     }
-    return createError(code, JSON.stringify({ errors: error }), opts)
+    return createError(code, JSON.stringify({ errors: [error] }), opts)
 }
