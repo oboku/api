@@ -1,6 +1,6 @@
 import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { AWS_API_URI, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from 'src/constants';
+import { AWS_API_URI } from 'src/constants';
 import { configure as configureGoogleDataSource } from '@libs/dataSources/google'
 import { S3 } from 'aws-sdk'
 import { withToken } from '@libs/auth';
@@ -10,13 +10,14 @@ import { getNormalizedHeader } from '@libs/utils';
 import { dataSourceFacade } from '@libs/dataSources';
 import { getNanoDbForUser } from '@libs/dbHelpers';
 import axios from "axios"
+import { getParameterValue } from '@libs/ssm';
 
 const s3 = new S3()
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   configureGoogleDataSource({
-    client_id: GOOGLE_CLIENT_ID,
-    client_secret: GOOGLE_CLIENT_SECRET
+    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID` }) ?? ``,
+    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET` }) ?? ``,
   })
 
   const { email } = await withToken(event)

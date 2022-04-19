@@ -2,7 +2,7 @@ import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import fs from 'fs'
 import path from 'path'
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, TMP_DIR } from '../../constants';
+import { TMP_DIR } from '../../constants';
 import { withToken } from '@libs/auth';
 import { configure as configureGoogleDataSource } from '@libs/dataSources/google'
 import schema from './schema';
@@ -10,11 +10,12 @@ import { atomicUpdate, findOne, getNanoDbForUser } from '@libs/dbHelpers';
 import { PromiseReturnType } from '@libs/types';
 import { retrieveMetadataAndSaveCover } from '@libs/books/retrieveMetadataAndSaveCover';
 import { getNormalizedHeader } from '@libs/utils';
+import { getParameterValue } from '@libs/ssm';
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   configureGoogleDataSource({
-    client_id: GOOGLE_CLIENT_ID,
-    client_secret: GOOGLE_CLIENT_SECRET
+    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID` }) ?? ``,
+    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET` }) ?? ``,
   })
 
   const files = await fs.promises.readdir(TMP_DIR)

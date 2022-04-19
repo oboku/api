@@ -51,10 +51,9 @@ const serverlessConfiguration: AWS = {
       STAGE: '${sls:stage}',
       COUCH_DB_URL: '${env:COUCH_DB_URL}',
       CONTACT_TO_ADDRESS: '${env:CONTACT_TO_ADDRESS}',
+      AWS_API_URI: '${env:AWS_API_URI}',
+      GOOGLE_BOOK_API_URL: '${env:GOOGLE_BOOK_API_URL}',
     },
-    // iam: {
-    //   role: "lambdaDefault"
-    // }
   },
   layers: {
     // sharp: {

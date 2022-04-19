@@ -1,5 +1,6 @@
+import { getParameterValue } from "@libs/ssm"
 import axios from "axios"
-import { GOOGLE_BOOK_API_URL, GOOGLE_API_KEY } from "../../constants"
+import { GOOGLE_BOOK_API_URL } from "../../constants"
 
 type YEAR = string
 
@@ -32,7 +33,8 @@ export type GoogleBooksApiResult = {
  * Supports formats like: [9782413023470, 978-1-947804-36-4]
  */
 export const findByISBN = async (isbn: string) => {
-  const response = await axios.get<GoogleBooksApiResult>(`${GOOGLE_BOOK_API_URL}/volumes?q=isbn:${isbn}&key=${GOOGLE_API_KEY}`)
+  const apiKey = await getParameterValue({ Name: `GOOGLE_API_KEY`, WithDecryption: true })
+  const response = await axios.get<GoogleBooksApiResult>(`${GOOGLE_BOOK_API_URL}/volumes?q=isbn:${isbn}&key=${apiKey}`)
 
   if (response.status === 200) {
     return response.data

@@ -1,18 +1,7 @@
 import jwt from 'jsonwebtoken'
-// import fs from 'fs'
-// import { JWT_PRIVATE_KEY_PATH } from '../constants'
-// import { APIGatewayProxyEvent } from 'aws-lambda'
-import { SSM } from 'aws-sdk'
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { createHttpError } from './httpErrors'
-// import createHttpError from 'http-errors'
-
-const ssm = new SSM({ region: 'us-east-1' })
-
-const getJwtPrivateKey = () => ssm.getParameter({
-  Name: `jwt-private-key`,
-  WithDecryption: true
-}).promise().then(value => value.Parameter?.Value)
+import { getParameterValue } from './ssm'
 
 const isAuthorized = async (authorization?: string) => {
   try {
@@ -20,7 +9,7 @@ const isAuthorized = async (authorization?: string) => {
 
     const token = authorization.replace('Bearer ', '')
 
-    const privateKey = await getJwtPrivateKey()
+    const privateKey = await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true })
 
     if (!privateKey) {
       console.error(`Unable to retrieve private key`)
@@ -53,7 +42,7 @@ export const createRefreshToken = (name: string) => {
 export const generateToken = async (email: string, userId: string) => {
   const tokenData: Token = { email, userId, sub: email, '_couchdb.roles': [email] }
 
-  return jwt.sign(tokenData, await getJwtPrivateKey() ?? ``, { algorithm: 'RS256' })
+  return jwt.sign(tokenData, await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true }) ?? ``, { algorithm: 'RS256' })
 }
 
 export const generateAdminToken = async () => {
@@ -64,7 +53,7 @@ export const generateAdminToken = async () => {
     '_couchdb.roles': ['_admin']
   }
 
-  return jwt.sign(data, await getJwtPrivateKey() ?? ``, { algorithm: 'RS256' })
+  return jwt.sign(data, await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true }) ?? ``, { algorithm: 'RS256' })
 }
 
 export const withToken = async (event: Pick<APIGatewayProxyEvent, `headers`>) => {
