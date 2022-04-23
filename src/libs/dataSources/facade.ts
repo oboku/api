@@ -62,9 +62,13 @@ export const dataSourceFacade = {
 
       const synchronizeAbleDataSource = await plugin?.sync(ctx, helpers)
 
+      console.log(`Execute sync process with ${plugin?.type} plugin`)
+
       if (synchronizeAbleDataSource) {
         await sync(synchronizeAbleDataSource, ctx, helpers)
       }
+
+      console.log(`Update datasource with sync success flag`)
 
       await atomicUpdate(db, 'datasource', dataSourceId, old => ({
         ...old,
