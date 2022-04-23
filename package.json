@@ -5,7 +5,7 @@
   "main": "serverless.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "echo todo",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "tsc": "tsc --noEmit",
     "postinstall": "npx ts-node scripts/prepareLayers.ts"
   },
@@ -29,12 +29,12 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "nano": "^10.0.0",
+    "node-fetch": "^3.2.0",
     "nodemailer": "^6.7.3",
     "ramda": "^0.28.0",
     "request": "^2.88.2",
     "sharp": "^0.30.3",
-    "unzipper": "^0.10.11",
-    "node-fetch": "^3.2.0"
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",
@@ -53,6 +53,7 @@
     "serverless": "^3.14.0",
     "serverless-bundle": "^5.3.0",
     "serverless-esbuild": "^1.23.3",
+    "serverless-offline": "^8.7.0",
     "serverless-webpack": "^5.7.0",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.4.0",
