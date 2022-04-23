@@ -75,6 +75,7 @@ export const dataSource: DataSourcePlugin = {
   },
   sync: async (ctx, helpers) => {
     const throttle = createThrottler(50)
+
     const auth = await authorize(ctx);
     const drive = google.drive({
       version: 'v3',

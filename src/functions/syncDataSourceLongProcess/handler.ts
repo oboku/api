@@ -6,7 +6,6 @@ import { S3 } from 'aws-sdk'
 import { withToken } from '@libs/auth';
 import schema from './schema';
 import { createHttpError } from '@libs/httpErrors';
-import { getNormalizedHeader } from '@libs/utils';
 import { dataSourceFacade } from '@libs/dataSources';
 import { getNanoDbForUser } from '@libs/dbHelpers';
 import axios from "axios"
@@ -16,19 +15,23 @@ const s3 = new S3()
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   configureGoogleDataSource({
-    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID` }) ?? ``,
-    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET` }) ?? ``,
+    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID`, WithDecryption: true }) ?? ``,
+    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET`, WithDecryption: true }) ?? ``,
   })
 
-  const { email } = await withToken(event)
+  const authorization = event.body.authorization ?? ``
   const { dataSourceId } = event.body
+  const credentials = JSON.parse(event.body.credentials ?? JSON.stringify({}))
+
+  const { email } = await withToken({
+    headers: {
+      authorization
+    }
+  })
 
   if (!dataSourceId) {
     throw createHttpError(400)
   }
-
-  const credentials = JSON.parse(getNormalizedHeader(event, 'oboku-credentials') || '{}')
-  const authorization = getNormalizedHeader(event, 'authorization') || ``
 
   const refreshBookMetadata = ({ bookId }: { bookId: string }) =>
     axios({

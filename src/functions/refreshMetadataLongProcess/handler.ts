@@ -2,29 +2,37 @@ import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import fs from 'fs'
 import path from 'path'
-import { TMP_DIR } from '../../constants';
+import { OFFLINE, TMP_DIR } from '../../constants';
 import { withToken } from '@libs/auth';
 import { configure as configureGoogleDataSource } from '@libs/dataSources/google'
 import schema from './schema';
 import { atomicUpdate, findOne, getNanoDbForUser } from '@libs/dbHelpers';
 import { PromiseReturnType } from '@libs/types';
 import { retrieveMetadataAndSaveCover } from '@libs/books/retrieveMetadataAndSaveCover';
-import { getNormalizedHeader } from '@libs/utils';
 import { getParameterValue } from '@libs/ssm';
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   configureGoogleDataSource({
-    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID` }) ?? ``,
-    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET` }) ?? ``,
+    client_id: await getParameterValue({ Name: `GOOGLE_CLIENT_ID`, WithDecryption: true }) ?? ``,
+    client_secret: await getParameterValue({ Name: `GOOGLE_CLIENT_SECRET`, WithDecryption: true }) ?? ``,
   })
 
-  const files = await fs.promises.readdir(TMP_DIR)
+  if (!OFFLINE) {
+    const files = await fs.promises.readdir(TMP_DIR)
 
-  await Promise.all(files.map(file => {
-    return fs.promises.unlink(path.join(TMP_DIR, file));
-  }))
+    await Promise.all(files.map(file => {
+      return fs.promises.unlink(path.join(TMP_DIR, file));
+    }))
+  }
 
-  const { userId, email } = await withToken(event)
+  const authorization = event.body.authorization ?? ``
+  const credentials = JSON.parse(event.body.credentials ?? JSON.stringify({}))
+
+  const { userId, email } = await withToken({
+    headers: {
+      authorization
+    }
+  })
 
   const bookId: string | undefined = event.body.bookId
 
@@ -55,7 +63,7 @@ const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) 
     data = await retrieveMetadataAndSaveCover({
       userId,
       userEmail: email,
-      credentials: JSON.parse(getNormalizedHeader(event, 'oboku-credentials') || '{}'),
+      credentials,
       book,
       link
     })

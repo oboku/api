@@ -3,7 +3,8 @@ import { jsonSafeParse } from "@middy/util"
 import middyJsonBodyParser from "@middy/http-json-body-parser"
 import httpErrorHandler from '@middy/http-error-handler'
 import cors from '@middy/http-cors'
-import { Lambda, Endpoint } from "aws-sdk"
+import { Lambda } from "aws-sdk"
+import { OFFLINE } from "src/constants"
 
 export const middyfy = (handler: any) => {
   return middy(handler)
@@ -33,16 +34,8 @@ export const middyfy = (handler: any) => {
 
 export const getAwsLambda = () => new Lambda({
   region: 'us-east-1',
-  // endpoint: 'http://0.0.0.0:4001',
-  // endpoint: 'http://host.docker.internal:4001',
-  // endpoint: new aws.Endpoint('http://host.docker.internal:4002'),
-  // endpoint: new aws.Endpoint('localhost:4001'),
-  // hostPrefixEnabled: false,
-  // sslEnabled: false,
-  httpOptions: {
-    // agent: new https.Agent({ rejectUnauthorized: false })
-  },
-  ...process.env.AWS_SAM_LOCAL && {
-    endpoint: new Endpoint('http://host.docker.internal:4002'),
-  },
+  httpOptions: {},
+  ...OFFLINE && {
+    endpoint: `http://localhost:3002`
+  }
 })

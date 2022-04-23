@@ -7,6 +7,7 @@ import refreshMetadata from '@functions/refreshMetadata';
 import refreshMetadataLongProcess from '@functions/refreshMetadataLongProcess';
 import syncDataSource from '@functions/syncDataSource';
 import syncDataSourceLongProcess from '@functions/syncDataSourceLongProcess';
+import { getCommon } from './serverlessHelpers';
 
 const functions: AWS[`functions`] = {
   covers,
@@ -30,10 +31,8 @@ Object.keys(functions).forEach((key) => {
 })
 
 const serverlessConfiguration: AWS = {
-  service: 'oboku-api',
-  frameworkVersion: '3',
-  useDotenv: true,
-  plugins: ['serverless-bundle'],
+  ...getCommon(),
+  plugins: ['serverless-offline', 'serverless-bundle'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -53,6 +52,7 @@ const serverlessConfiguration: AWS = {
       CONTACT_TO_ADDRESS: '${env:CONTACT_TO_ADDRESS}',
       AWS_API_URI: '${env:AWS_API_URI}',
       GOOGLE_BOOK_API_URL: '${env:GOOGLE_BOOK_API_URL}',
+      OFFLINE: '${env:OFFLINE}',
     },
   },
   layers: {
@@ -135,6 +135,15 @@ const serverlessConfiguration: AWS = {
                   "Resource": [
                     "arn:aws:s3:::oboku-covers",
                     "arn:aws:s3:::oboku-covers/*"
+                  ],
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "lambda:InvokeFunction",
+                  ],
+                  "Resource": [
+                    "arn:aws:lambda:${aws:region}:*:function:${self:service}-${sls:stage}*",
                   ],
                 },
                 // this is needed to read from ssm and retrieve secrets

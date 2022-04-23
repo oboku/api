@@ -1,16 +1,20 @@
 import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { getAwsLambda, middyfy } from '@libs/lambda';
+import { getNormalizedHeader } from '@libs/utils';
 import { STAGE } from 'src/constants';
+import schema from './schema';
 
-const lambda: ValidatedEventAPIGatewayProxyEvent = async (event) => {
+const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   await getAwsLambda().invoke({
     InvocationType: 'Event',
     FunctionName: `oboku-api-${STAGE}-refreshMetadataLongProcess`,
-    ...process.env.AWS_SAM_LOCAL && {
-      InvocationType: 'RequestResponse',
-      FunctionName: 'refreshMetadataLongProcess',
-    },
-    Payload: JSON.stringify(event),
+    Payload: JSON.stringify({
+      body: {
+        bookId: event.body.bookId,
+        credentials: getNormalizedHeader(event, `oboku-credentials`),
+        authorization: getNormalizedHeader(event, `authorization`),
+      },
+    }),
   }).promise()
 
   return {
