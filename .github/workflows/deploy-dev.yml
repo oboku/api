@@ -17,5 +17,5 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      COUCH_DB_URL: ${{ secrets.COUCH_DB_URL_PROD }}
+      COUCH_DB_URL: ${{ secrets.COUCH_DB_URL_DEV }}
       CONTACT_TO_ADDRESS: ${{ secrets.CONTACT_TO_ADDRESS }}
