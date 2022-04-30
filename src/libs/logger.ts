@@ -11,10 +11,6 @@ export const UtilLogger = {
 
 const _logger: { log: typeof console['log'], error: typeof console['error'] } = UtilLogger
 
-// export const configure = (logger: { log: typeof console['log'], error: typeof console['error'] }) => {
-//   _logger = logger
-// }
-
 export const Logger = {
   namespace: (name: string) => ({
     log: (message?: any, ...optionalParams: any[]) => _logger.log(name, message, ...optionalParams),

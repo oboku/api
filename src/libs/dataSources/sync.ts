@@ -57,6 +57,8 @@ const syncTags = async ({ helpers, item, lvl }: {
 
   const tagNames = uniq(getItemTags(item, helpers))
 
+  console.log(`found ${tagNames.length} tags`)
+
   await Promise.all(tagNames.map(async (tag) => {
     const { created, id } = await helpers.createTagFromName(tag, true)
     if (created) {
@@ -114,6 +116,8 @@ const syncFolder = async ({ ctx, helpers, hasCollectionAsParent, item, lvl, pare
       })
     }
   }))
+
+  logger.log(`syncFolder ${item.name} DONE!`)
 }
 
 const createOrUpdateBook = async ({ ctx: { dataSourceType }, helpers, parents, item }: {
