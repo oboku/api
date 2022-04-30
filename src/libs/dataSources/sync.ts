@@ -45,7 +45,7 @@ const getItemTags = (item: SynchronizeAbleDataSource | SynchronizeAbleItem, help
  * We first go through all folders and items and create the tags. This way we avoid concurrent tags creation and we can later
  * easily retrieve tags ids.
  */
-const syncTags = async ({ helpers, item }: {
+const syncTags = async ({ helpers, item, lvl }: {
   ctx: Context,
   helpers: Helpers,
   lvl: number,
@@ -53,6 +53,8 @@ const syncTags = async ({ helpers, item }: {
   item: SynchronizeAbleDataSource | SynchronizeAbleItem,
   parents: (SynchronizeAbleItem | SynchronizeAbleDataSource)[]
 }) => {
+  console.log(`syncTags for item ${item.name} and lvl ${lvl}`)
+
   const tagNames = uniq(getItemTags(item, helpers))
 
   await Promise.all(tagNames.map(async (tag) => {
@@ -72,7 +74,7 @@ const syncFolder = async ({ ctx, helpers, hasCollectionAsParent, item, lvl, pare
   parents: (SynchronizeAbleItem | SynchronizeAbleDataSource)[]
 }) => {
   const metadataForFolder = helpers.extractDirectivesFromName(item.name)
-  // logger.log(`syncFolder ${item.name}: metadata `, metadataForFolder)
+  logger.log(`syncFolder ${item.name}: metadata `, metadataForFolder)
 
   const isCollection = isFolder(item) && !hasCollectionAsParent && lvl > 0 && !metadataForFolder.isNotACollection
 

@@ -11,10 +11,15 @@ export const middyfy = (handler: any) => {
     .use(middyJsonBodyParser())
     .use({
       onError: async request => {
+        if (request.error) {
+          console.error(request.error)
+        }
+
         // we enforce non exposure unless specified
         if (request.error && (request.error as any)?.expose === undefined) {
           (request.error as any).expose = false
         }
+
         // we force JSON response for any error that is a simple string
         if (request.error && typeof jsonSafeParse(request.error.message) === `string`) {
           request.error.message = JSON.stringify({ message: request.error.message })
