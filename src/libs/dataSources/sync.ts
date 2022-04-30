@@ -81,7 +81,7 @@ const syncFolder = async ({ ctx, helpers, hasCollectionAsParent, item, lvl, pare
   const isCollection = isFolder(item) && !hasCollectionAsParent && lvl > 0 && !metadataForFolder.isNotACollection
 
   if (metadataForFolder.isIgnored) {
-    // logger.log(`syncFolder ${item.name}: ignore`)
+    logger.log(`syncFolder ${item.name}: ignored!`)
     return
   }
 
@@ -95,7 +95,7 @@ const syncFolder = async ({ ctx, helpers, hasCollectionAsParent, item, lvl, pare
     await registerOrUpdateCollection({ ctx, item, helpers })
   }
 
-  // logger.log(`syncFolder ${item.name}: with items ${item.items?.length || 0} items`)
+  logger.log(`syncFolder ${item.name}: with items ${item.items?.length || 0} items`)
 
   await Promise.all((item.items || []).map(async subItem => {
     if (isFile(subItem)) {
