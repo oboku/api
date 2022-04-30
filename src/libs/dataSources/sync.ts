@@ -127,7 +127,7 @@ const createOrUpdateBook = async ({ ctx: { dataSourceType }, helpers, parents, i
   helpers: Helpers,
 }) => {
   try {
-    // logger.log(`createOrUpdateBook "${item.name}":`, item.resourceId)
+    logger.log(`createOrUpdateBook "${item.name}":`, item.resourceId)
     const parentTagNames = parents.reduce((tags: string[], parent) => [...tags, ...helpers.extractDirectivesFromName(parent.name).tags], [])
     const metadata = helpers.extractDirectivesFromName(item.name)
     const parentFolders = parents.filter(parent => isFolder(parent)) as SynchronizeAbleItem[]
@@ -203,6 +203,8 @@ const createOrUpdateBook = async ({ ctx: { dataSourceType }, helpers, parents, i
       const { applyTags } = await helpers.getDataSourceData<GoogleDriveDataSourceData>()
       await helpers.addTagsToBook(existingBook._id, applyTags || [])
     }
+
+    logger.log(`createOrUpdateBook "${item.name}": DONE!`)
   } catch (e) {
     logger.error(`createOrUpdateBook something went wrong for book ${item.name} (${item.resourceId})`)
     logger.error(e)
