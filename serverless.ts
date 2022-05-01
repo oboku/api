@@ -36,6 +36,7 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    timeout: 30, //  30 seconds
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -130,7 +131,9 @@ const serverlessConfiguration: AWS = {
                     "s3:ListBucket",
                     "s3:GetBucketLocation",
                     "s3:GetObjectVersion",
-                    "s3:GetLifecycleConfiguration"
+                    "s3:GetLifecycleConfiguration",
+                    "s3:PutObject",
+                    "s3:PutObjectAcl"
                   ],
                   "Resource": [
                     "arn:aws:s3:::oboku-covers",
