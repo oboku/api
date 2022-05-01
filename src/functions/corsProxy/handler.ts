@@ -1,9 +1,9 @@
 import nodeFetch from 'node-fetch'
-import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { createHttpError } from '@libs/httpErrors';
 import { middyfy } from '@libs/lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const lambda: ValidatedEventAPIGatewayProxyEvent = async (event) => {
+const lambda = async (event: APIGatewayProxyEvent) => {
   const params = event.pathParameters;
   const { Host, host, Origin, origin, ...headers } = event.headers;
   const bodyStr = event.body as string ?? ``
