@@ -1,3 +1,4 @@
+import { Logger } from "@libs/logger"
 import { getParameterValue } from "@libs/ssm"
 import axios from "axios"
 import { GOOGLE_BOOK_API_URL } from "../../constants"
@@ -37,10 +38,10 @@ export const findByISBN = async (isbn: string) => {
   const response = await axios.get<GoogleBooksApiResult>(`${GOOGLE_BOOK_API_URL}/volumes?q=isbn:${isbn}&key=${apiKey}`)
 
   if (response.status === 200) {
+    Logger.log(`google findByISBN response`, response.data)
+
     return response.data
   }
-
-  console.error(response)
 
   throw new Error(`An error occured during findByISBN`)
 }
