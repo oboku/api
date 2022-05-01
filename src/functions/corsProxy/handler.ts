@@ -6,6 +6,7 @@ import { middyfy } from '@libs/lambda';
 const lambda: ValidatedEventAPIGatewayProxyEvent = async (event) => {
   const params = event.pathParameters;
   const { Host, host, Origin, origin, ...headers } = event.headers;
+  const bodyStr = event.body as string ?? ``
 
   console.log(event);
   console.log(`Got request with params:`, params);
@@ -29,7 +30,7 @@ const lambda: ValidatedEventAPIGatewayProxyEvent = async (event) => {
   const res = await nodeFetch(url, {
     method: event.httpMethod,
     // timeout: 20000,
-    body: hasBody ? ((event.body as any) || ``) : undefined,
+    body: hasBody ? bodyStr : undefined,
     headers: headers as any,
   });
   console.log(`Got response from ${url} ---> {statusCode: ${res.status}}`);
