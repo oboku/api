@@ -7,6 +7,7 @@ import refreshMetadata from '@functions/refreshMetadata';
 import refreshMetadataLongProcess from '@functions/refreshMetadataLongProcess';
 import syncDataSource from '@functions/syncDataSource';
 import syncDataSourceLongProcess from '@functions/syncDataSourceLongProcess';
+import corsProxy from '@functions/corsProxy';
 import { getCommon } from './serverlessHelpers';
 
 const functions: AWS[`functions`] = {
@@ -17,7 +18,8 @@ const functions: AWS[`functions`] = {
   refreshMetadata,
   refreshMetadataLongProcess,
   syncDataSource,
-  syncDataSourceLongProcess
+  syncDataSourceLongProcess,
+  cors: corsProxy
 }
 
 Object.keys(functions).forEach((key) => {
