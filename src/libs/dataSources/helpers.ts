@@ -3,7 +3,7 @@ import {
   insert, findOne, addLinkToBook, find, getOrCreateTagFromName, createTagFromName
 } from '@libs/dbHelpers'
 import createNano from 'nano'
-import { InsertableBookDocType, SafeMangoQuery, directives, ObokuErrorCode, ObokuSharedError, DocType, ModelOf } from "@oboku/shared"
+import { InsertAbleBookDocType, SafeMangoQuery, directives, ObokuErrorCode, ObokuSharedError, DocType, ModelOf } from "@oboku/shared"
 
 export const createHelpers = (
   dataSourceId: string,
@@ -28,7 +28,7 @@ export const createHelpers = (
       return data
     },
     isBookCoverExist: async (bookId: string) => getBookCover({ coverId: `${userId}-${bookId}` }),
-    createBook: (data?: Partial<InsertableBookDocType>) => createBook(db, data),
+    createBook: (data?: Partial<InsertAbleBookDocType>) => createBook(db, data),
     findOne: <M extends DocType['rx_model'], D extends ModelOf<M>>(
       model: M,
       query: SafeMangoQuery<D>

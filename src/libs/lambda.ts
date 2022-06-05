@@ -4,7 +4,7 @@ import middyJsonBodyParser from "@middy/http-json-body-parser"
 import httpErrorHandler from '@middy/http-error-handler'
 import cors from '@middy/http-cors'
 import { Lambda } from "aws-sdk"
-import { OFFLINE } from "src/constants"
+import { OFFLINE } from "../constants"
 
 export const middyfy = (handler: any) => {
   return middy(handler)

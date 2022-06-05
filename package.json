@@ -19,12 +19,13 @@
     "@middy/http-error-handler": "^2.5.7",
     "@middy/http-json-body-parser": "^2.5.3",
     "@middy/http-response-serializer": "^2.5.7",
-    "@oboku/plugin-back": "^0.0.14",
-    "@oboku/plugin-imhentai-back": "^0.0.11",
-    "@oboku/shared": "^0.0.13",
+    "@oboku/plugin-back": "^0.8.0",
+    "@oboku/plugin-imhentai-back": "^0.1.0",
+    "@oboku/shared": "^0.6.0",
     "abort-controller": "^3.0.0",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.10",
+    "crypto-js": "4.x",
     "dropbox": "^10.27.0",
     "fast-xml-parser": "^3.21.1",
     "googleapis": "^100.0.0",
@@ -37,7 +38,8 @@
     "ramda": "^0.28.0",
     "request": "^2.88.2",
     "sharp": "^0.30.3",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "yup": "0.32.x"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",

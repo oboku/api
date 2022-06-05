@@ -172,6 +172,9 @@ const createOrUpdateBook = async ({ ctx: { dataSourceType }, helpers, parents, i
         data: JSON.stringify({}),
         createdAt: new Date().toISOString(),
         modifiedAt: null,
+        rxdbMeta: {
+          lwt: (new Date()).getTime()
+        }
       })
       await helpers.addLinkToBook(bookId, insertedLink.id)
       await updateTagsForBook(bookId, [...metadata.tags, ...parentTagNames], helpers)
@@ -349,7 +352,10 @@ const registerOrUpdateCollection = async ({ item: { name, resourceId }, helpers,
       books: [],
       createdAt: new Date().toISOString(),
       modifiedAt: null,
-      dataSourceId: ctx.dataSourceId
+      dataSourceId: ctx.dataSourceId,
+      rxdbMeta: {
+        lwt: (new Date()).getTime()
+      }
     })
     collectionId = created.id
   }

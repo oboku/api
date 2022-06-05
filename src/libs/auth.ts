@@ -1,26 +1,29 @@
-import jwt from 'jsonwebtoken'
-import { APIGatewayProxyEvent } from 'aws-lambda'
-import { createHttpError } from './httpErrors'
-import { getParameterValue } from './ssm'
+import jwt from "jsonwebtoken";
+import { APIGatewayProxyEvent } from "aws-lambda";
+import { createHttpError } from "./httpErrors";
+import { getParameterValue } from "./ssm";
 
 const isAuthorized = async (authorization?: string) => {
   try {
-    if (!authorization) throw new Error('Looks like authorization is empty')
+    if (!authorization) throw new Error("Looks like authorization is empty");
 
-    const token = authorization.replace('Bearer ', '')
+    const token = authorization.replace("Bearer ", "");
 
-    const privateKey = await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true })
+    const privateKey = await getParameterValue({
+      Name: `jwt-private-key`,
+      WithDecryption: true,
+    });
 
     if (!privateKey) {
-      console.error(`Unable to retrieve private key`)
-      throw createHttpError(401)
+      console.error(`Unable to retrieve private key`);
+      throw createHttpError(401);
     }
 
-    return jwt.verify(token, privateKey, { algorithms: ['RS256'] }) as Token
+    return jwt.verify(token, privateKey, { algorithms: ["RS256"] }) as Token;
   } catch (e) {
-    throw createHttpError(401)
+    throw createHttpError(401);
   }
-}
+};
 
 // export const createAuthenticator = ({ privateKey }: { privateKey: string }) => ({
 //   withToken: _withToken(privateKey)
@@ -29,40 +32,63 @@ const isAuthorized = async (authorization?: string) => {
 // const authenticator = createAuthenticator({ privateKey: JWT_PRIVATE_KEY })
 
 export type Token = {
-  userId: string,
-  email: string,
-  sub: string,
-  '_couchdb.roles'?: string[]
-}
+  userId: string;
+  email: string;
+  sub: string;
+  "_couchdb.roles"?: string[];
+};
 
 export const createRefreshToken = (name: string) => {
-  return generateToken(name, '1d')
-}
+  return generateToken(name, "1d");
+};
 
 export const generateToken = async (email: string, userId: string) => {
-  const tokenData: Token = { email, userId, sub: email, '_couchdb.roles': [email] }
+  const tokenData: Token = {
+    email,
+    userId,
+    sub: email,
+    "_couchdb.roles": [email],
+  };
 
-  return jwt.sign(tokenData, await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true }) ?? ``, { algorithm: 'RS256' })
-}
+  return jwt.sign(
+    tokenData,
+    (await getParameterValue({
+      Name: `jwt-private-key`,
+      WithDecryption: true,
+    })) ?? ``,
+    { algorithm: "RS256" }
+  );
+};
 
-export const generateAdminToken = async () => {
+// https://docs.couchdb.org/en/3.2.0/config/couch-peruser.html#couch_peruser
+export const generateAdminToken = async (options: { sub?: string } = {}) => {
   const data: Token = {
-    email: '',
-    userId: '',
-    sub: 'admin',
-    '_couchdb.roles': ['_admin']
-  }
+    email: "",
+    userId: "",
+    sub: "admin",
+    "_couchdb.roles": ["_admin"],
+    ...options,
+  };
 
-  return jwt.sign(data, await getParameterValue({ Name: `jwt-private-key`, WithDecryption: true }) ?? ``, { algorithm: 'RS256' })
-}
+  return jwt.sign(
+    data,
+    (await getParameterValue({
+      Name: `jwt-private-key`,
+      WithDecryption: true,
+    })) ?? ``,
+    { algorithm: "RS256" }
+  );
+};
 
-export const withToken = async (event: Pick<APIGatewayProxyEvent, `headers`>) => {
-  const authorization = event.headers.Authorization as string | undefined || event.headers.authorization as string | undefined
+export const withToken = async (
+  event: Pick<APIGatewayProxyEvent, `headers`>
+) => {
+  const authorization =
+    (event.headers.Authorization as string | undefined) ||
+    (event.headers.authorization as string | undefined);
 
-  return await isAuthorized(authorization)
-}
-
-
+  return await isAuthorized(authorization);
+};
 
 // const createRefreshToken = (name: string, authSession: string) => {
 //   return generateToken(name, '1d')

@@ -1,7 +1,7 @@
 import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { getAwsLambda, middyfy } from '@libs/lambda';
 import { getNormalizedHeader } from '@libs/utils';
-import { STAGE } from 'src/constants';
+import { STAGE } from '../../constants';
 import schema from './schema';
 
 const lambda: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {

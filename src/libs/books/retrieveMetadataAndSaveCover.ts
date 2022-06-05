@@ -14,7 +14,7 @@ import { NormalizedMetadata } from './types'
 import { parseOpfMetadata } from './parseOpfMetadata'
 import { parseGoogleMetadata } from './parseGoogleMetadata'
 import { saveCoverFromExternalLinkToBucket } from './saveCoverFromExternalLinkToBucket'
-import { METADATA_EXTRACTOR_SUPPORTED_EXTENSIONS, TMP_DIR } from 'src/constants'
+import { METADATA_EXTRACTOR_SUPPORTED_EXTENSIONS, TMP_DIR } from '../../constants'
 
 const logger = Logger.namespace('retrieveMetadataAndSaveCover')
 

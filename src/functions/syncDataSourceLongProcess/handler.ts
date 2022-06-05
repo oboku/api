@@ -1,6 +1,6 @@
 import { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { AWS_API_URI } from 'src/constants';
+import { AWS_API_URI } from '../../constants';
 import { configure as configureGoogleDataSource } from '@libs/dataSources/google'
 import { S3 } from 'aws-sdk'
 import { withToken } from '@libs/auth';

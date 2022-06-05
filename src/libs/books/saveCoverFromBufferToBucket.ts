@@ -1,6 +1,6 @@
 import { S3 } from 'aws-sdk'
 import sharp from 'sharp'
-import { COVER_MAXIMUM_SIZE_FOR_STORAGE } from 'src/constants'
+import { COVER_MAXIMUM_SIZE_FOR_STORAGE } from '../../constants'
 
 const s3 = new S3()
 

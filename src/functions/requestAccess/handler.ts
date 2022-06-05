@@ -4,7 +4,7 @@ import { middyfy } from '@libs/lambda';
 import schema from './schema';
 import nodemailer from 'nodemailer'
 import { SSM } from 'aws-sdk'
-import { CONTACT_TO_ADDRESS } from 'src/constants';
+import { CONTACT_TO_ADDRESS } from '../../constants';
 
 const ssm = new SSM({ region: 'us-east-1' })
 
