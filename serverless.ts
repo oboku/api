@@ -194,6 +194,8 @@ const serverlessConfiguration: AWS = {
         `aws-sdk`,
         `aws-lambda`,
         `nano`,
+        `yup`,
+        `crypto-js`,
         /^@oboku\/.+$/,
         /^@middy\/.+$/,
         `dropbox`
